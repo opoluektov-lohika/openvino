@@ -13,6 +13,11 @@ using namespace ov::test::subgraph;
 
 namespace {
 
+//const std::vector<ov::test::ElementType> netPrecisions = {
+//    ov::element::Type_t::f16,
+//    ov::element::Type_t::f32,
+//};
+
 const std::vector<float> score_threshold = {0.01000000074505806f};
 
 const std::vector<float> nms_threshold = {0.2f};
@@ -42,7 +47,7 @@ const std::vector<std::vector<InputShape>> inputShapes = {
     static_shapes_to_test_representation({{16, 4}, {16, 8}, {16, 2}, {1, 3}}),
 };
 
-INSTANTIATE_TEST_SUITE_P(smoke_ExperimentalDetectronDetectionOutput,
+INSTANTIATE_TEST_SUITE_P(smoke_ExperimentalDetectronDetectionOutput_f32,
                          ExperimentalDetectronDetectionOutputLayerTest,
                          ::testing::Combine(::testing::ValuesIn(inputShapes),
                                             ::testing::ValuesIn(score_threshold),
@@ -54,6 +59,21 @@ INSTANTIATE_TEST_SUITE_P(smoke_ExperimentalDetectronDetectionOutput,
                                             ::testing::ValuesIn(class_agnostic_box_regression),
                                             ::testing::ValuesIn(deltas_weights),
                                             ::testing::Values(ov::element::Type_t::f32),
+                                            ::testing::Values(CommonTestUtils::DEVICE_GPU)),
+                         ExperimentalDetectronDetectionOutputLayerTest::getTestCaseName);
+
+INSTANTIATE_TEST_SUITE_P(smoke_ExperimentalDetectronDetectionOutput_f16,
+                         ExperimentalDetectronDetectionOutputLayerTest,
+                         ::testing::Combine(::testing::ValuesIn(inputShapes),
+                                            ::testing::ValuesIn(score_threshold),
+                                            ::testing::ValuesIn(nms_threshold),
+                                            ::testing::ValuesIn(max_delta_log_wh),
+                                            ::testing::ValuesIn(num_classes),
+                                            ::testing::ValuesIn(post_nms_count),
+                                            ::testing::ValuesIn(max_detections_per_image),
+                                            ::testing::ValuesIn(class_agnostic_box_regression),
+                                            ::testing::ValuesIn(deltas_weights),
+                                            ::testing::Values(ov::element::Type_t::f16),
                                             ::testing::Values(CommonTestUtils::DEVICE_GPU)),
                          ExperimentalDetectronDetectionOutputLayerTest::getTestCaseName);
 
